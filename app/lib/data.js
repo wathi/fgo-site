@@ -26,3 +26,32 @@ export async function getServantById(id) {
     console.error('Error:', error);
   }
 }
+
+export function getClassList() {
+  const classList = [
+    'saber',
+    'archer',
+    'lancer',
+    'rider',
+    'caster',
+    'assassin',
+    'berserker',
+    'shielder',
+    'ruler',
+    'alterEgo',
+    'avenger',
+    'moonCancer',
+    'foreigner',
+    'pretender',
+    'beastII',
+    'beastI',
+    'beastIIIR',
+    'beastIIIL',
+    'beastIV',
+    'beast',
+    'beastVI',
+    'beastVIBoss',
+  ];
+
+  return classList;
+}

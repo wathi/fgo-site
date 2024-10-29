@@ -1,17 +1,8 @@
 import Link from 'next/link';
+import { getClassList } from '@/app/lib/data';
 
 export default async function Home() {
-  const classList = [
-    'saber',
-    'archer',
-    'lancer',
-    'rider',
-    'caster',
-    'assassin',
-    'berserker',
-    'shielder',
-  ];
-
+  const classList = getClassList();
   return (
     <>
       <h1 className="text-blue-500">FGO Site</h1>
