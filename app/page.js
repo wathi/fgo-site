@@ -1,4 +1,4 @@
-import ServentClass from '@/app/class/page';
+import Link from 'next/link';
 
 export default async function Home() {
   const classList = [
@@ -15,10 +15,11 @@ export default async function Home() {
   return (
     <>
       <h1 className="text-blue-500">FGO Site</h1>
-      {/* <ServentClass /> */}
 
       {classList.map((item) => (
-        <div key={item}>{item}</div>
+        <div key={item}>
+          <Link href={`/class/${item}`}>{item}</Link>
+        </div>
       ))}
     </>
   );
