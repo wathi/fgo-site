@@ -6,7 +6,6 @@ export default async function Servent({ params }) {
   const id = (await params).id;
   const servantByIdData = await getServantById(id);
 
-  console.log(id);
   return (
     <>
       <div className="my-1">{servantByIdData.id}</div>
@@ -18,6 +17,16 @@ export default async function Servent({ params }) {
         alt="Picture of the author"
       />
       <div className="my-1">{servantByIdData.name}</div>
+      <table className="text-sm">
+        <tr>
+          <td>HP</td>
+          <td className="px-1">{servantByIdData.hpMax}</td>
+        </tr>
+        <tr>
+          <td>ATK</td>
+          <td className="px-1">{servantByIdData.atkMax}</td>
+        </tr>
+      </table>
       <div className="mt-10">
         <Link
           className="px-10 py-1 border-2"
