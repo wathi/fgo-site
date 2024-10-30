@@ -9,19 +9,23 @@ export default async function Servent({ params }) {
   console.log(id);
   return (
     <>
-      <div>Servent page</div>
+      <div className="my-1">{servantByIdData.id}</div>
       <Image
+        className="m-1"
         src={servantByIdData.face}
         width={50}
         height={50}
         alt="Picture of the author"
       />
-      <div>{servantByIdData.id}</div>
-      <div>{servantByIdData.name}</div>
-      <Link href={`/class/${servantByIdData.className}`}>
-        {servantByIdData.className}
-      </Link>
-      <Link href={`/`}>Home</Link>
+      <div className="my-1">{servantByIdData.name}</div>
+      <div className="mt-10">
+        <Link
+          className="px-10 py-1 border-2"
+          href={`/class/${servantByIdData.className}`}
+        >
+          Back
+        </Link>
+      </div>
     </>
   );
 }
