@@ -17,7 +17,19 @@ export async function getServantByClass(className) {
 
 export async function getServantById(id) {
   try {
-    const response = await fetch(`${baseURL}/basic/${region}/servant/${id}`);
+    const response = await fetch(`${baseURL}/nice/${region}/servant/${id}`);
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+export async function getServantDetailsById(id) {
+  try {
+    const response = await fetch(`${baseURL}/nice/${region}/servant/${id}`);
 
     const data = await response.json();
     console.log(data);

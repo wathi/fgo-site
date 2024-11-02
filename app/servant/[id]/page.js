@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getServantById } from '@/app/lib/data';
+import ShowImage from './show-image';
 
 export default async function Servent({ params }) {
   const id = (await params).id;
@@ -11,22 +12,68 @@ export default async function Servent({ params }) {
       <div className="my-1">{servantByIdData.id}</div>
       <Image
         className="m-1"
-        src={servantByIdData.face}
+        src={servantByIdData.extraAssets.faces.ascension[1]}
         width={50}
         height={50}
-        alt="Picture of the author"
+        alt={servantByIdData.name}
       />
       <div className="my-1">{servantByIdData.name}</div>
-      <table className="text-sm">
-        <tr>
-          <td>HP</td>
-          <td className="px-1">{servantByIdData.hpMax}</td>
-        </tr>
-        <tr>
-          <td>ATK</td>
-          <td className="px-1">{servantByIdData.atkMax}</td>
-        </tr>
+      <table className="text-sm mb-2 w-full table-fixed border">
+        <thead>
+          <tr>
+            <th className="text-center border">筋肉</th>
+            <th className="text-center border">耐久</th>
+            <th className="text-center border">敏捷</th>
+            <th className="text-center border">魔力</th>
+            <th className="text-center border">幸運</th>
+            <th className="text-center border">宝具</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td className="text-center border">
+              {servantByIdData.limits[0].strength}
+            </td>
+            <td className="text-center">
+              {servantByIdData.limits[0].endurance}
+            </td>
+            <td className="text-center border">
+              {servantByIdData.limits[0].agility}
+            </td>
+            <td className="text-center border">
+              {servantByIdData.limits[0].magic}
+            </td>
+            <td className="text-center border">
+              {servantByIdData.limits[0].luck}
+            </td>
+            <td className="text-center border">
+              {servantByIdData.limits[0].np}
+            </td>
+          </tr>
+        </tbody>
       </table>
+      <table className="text-sm mb-2 w-full table-fixed border">
+        <tbody>
+          <tr>
+            <td className="w-20 text-center border">HP</td>
+            <td className="px-1 border">{servantByIdData.hpMax}</td>
+          </tr>
+          <tr>
+            <td className="text-center border ">ATK</td>
+            <td className="px-1 border">{servantByIdData.atkMax}</td>
+          </tr>
+          <tr>
+            <td className="w-20 text-center border">宝具</td>
+            <td className="px-1 border">
+              {servantByIdData.noblePhantasms[0].name}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <ShowImage
+        faces={servantByIdData.extraAssets.charaFigure.ascension}
+        name={servantByIdData.name}
+      />
       <div className="mt-10">
         <Link
           className="px-10 py-1 border-2"
