@@ -6,11 +6,6 @@ export default function ShowImage({ faces, name }) {
   console.log(faces);
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
-  const [isActive, setActive] = useState(false);
-
-  const selectcharaFigure = () => {
-    setActive(true);
-  };
 
   return (
     <div className="mt-10">
