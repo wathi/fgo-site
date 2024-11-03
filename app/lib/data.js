@@ -8,7 +8,6 @@ export async function getServantByClass(className) {
     );
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error:', error);
@@ -20,7 +19,6 @@ export async function getServantById(id) {
     const response = await fetch(`${baseURL}/nice/${region}/servant/${id}`);
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error:', error);
@@ -32,7 +30,6 @@ export async function getServantDetailsById(id) {
     const response = await fetch(`${baseURL}/nice/${region}/servant/${id}`);
 
     const data = await response.json();
-    console.log(data);
     return data;
   } catch (error) {
     console.error('Error:', error);

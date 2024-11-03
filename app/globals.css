@@ -2,20 +2,38 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  --background: #ffffff;
-  --foreground: #171717;
+.clip-face {
+  clip: rect(500px 163px 655px 0);
+  top: -500px;
+  left: -1px;
+  animation-name: face-animation;
+  animation-iteration-count: infinite;
+  animation-duration: 4s;
+  animation-timing-function: step-end;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@keyframes face-animation {
+  0% {
+    clip: rect(500px 163px 655px 0);
+    top: -500px;
+    left: -1px;
+  }
+
+  25% {
+    clip: rect(500px 326px 655px 163px);
+    top: -500px;
+    left: -163px;
+  }
+
+  50% {
+    clip: rect(500px 489px 655px 326px);
+    top: -500px;
+    left: -326px;
+  }
+
+  75% {
+    clip: rect(500px 652px 655px 489px);
+    top: -500px;
+    left: -489px;
   }
 }
-
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-} */

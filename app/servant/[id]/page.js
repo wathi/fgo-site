@@ -9,6 +9,14 @@ export default async function Servent({ params }) {
 
   return (
     <>
+      <div className="my-5">
+        <Link
+          className="px-10 py-1 border-2"
+          href={`/class/${servantByIdData.className}`}
+        >
+          Back
+        </Link>
+      </div>
       <div className="my-1">{servantByIdData.id}</div>
       <Image
         className="m-1"
@@ -74,14 +82,6 @@ export default async function Servent({ params }) {
         faces={servantByIdData.extraAssets.charaFigure.ascension}
         name={servantByIdData.name}
       />
-      <div className="mt-10">
-        <Link
-          className="px-10 py-1 border-2"
-          href={`/class/${servantByIdData.className}`}
-        >
-          Back
-        </Link>
-      </div>
     </>
   );
 }

@@ -3,9 +3,41 @@ import Image from 'next/image';
 import { useState } from 'react';
 
 export default function ShowImage({ faces, name }) {
-  console.log(faces);
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
+  const [mouseDown, setMouseDown] = useState(false);
+  const [mousePosition, setMousePosition] = useState({
+    offsetX: 0,
+    offsetY: 0,
+  });
+  const [imagePostition, setImagePosition] = useState({ top: 0, left: 0 });
+
+  const handleMouseDown = (event) => {
+    setMouseDown(true);
+    setMousePosition({
+      offsetX: event.nativeEvent.offsetX - event.clientX,
+      offsetY: event.nativeEvent.offsetY - event.clientY,
+    });
+    console.log(
+      event.clientX,
+      event.clientY,
+      event.nativeEvent.offsetX,
+      event.nativeEvent.offsetY
+    );
+  };
+
+  const handleMouseUp = (event) => {
+    setMouseDown(false);
+  };
+
+  const handleMouseMove = (event) => {
+    if (mouseDown) {
+      setImagePosition({
+        top: event.clientY + mousePosition.offsetY - 500,
+        left: event.clientX + mousePosition.offsetX,
+      });
+    }
+  };
 
   return (
     <div className="mt-10">
@@ -26,7 +58,44 @@ export default function ShowImage({ faces, name }) {
         ))}
       </div>
 
-      <Image src={faces[currentFaceKey]} width={500} height={500} alt={name} />
+      <div
+        className="relative mt-5"
+        style={{ width: '650px', height: '550px' }}
+      >
+        <div
+          className="relative"
+          style={{ top: imagePostition.top, left: imagePostition.left }}
+          onMouseDown={(e) => {
+            e.preventDefault();
+            handleMouseDown(e);
+          }}
+          onMouseUp={(e) => handleMouseUp(e)}
+          onMouseMove={(e) => handleMouseMove(e)}
+        >
+          <img
+            className="clip-face absolute"
+            // style={{ top: imagePostition.top, left: imagePostition.left }}
+            src={faces[currentFaceKey]}
+            alt={name}
+            loading="eager"
+          ></img>
+        </div>
+
+        <Image
+          className="mb-10"
+          src={faces[currentFaceKey]}
+          width={650}
+          height={480}
+          style={{
+            width: '650px',
+            height: '480px',
+            objectFit: 'none',
+            objectPosition: '0 0',
+          }}
+          alt={name}
+          loading="eager"
+        />
+      </div>
     </div>
   );
 }
