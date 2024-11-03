@@ -5,36 +5,52 @@ import { useState } from 'react';
 export default function ShowImage({ faces, name }) {
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
-  const [mouseDown, setMouseDown] = useState(false);
-  const [mousePosition, setMousePosition] = useState({
-    offsetX: 0,
-    offsetY: 0,
+  const [pointerDown, setPointerDown] = useState(false);
+  const [pointerPosition, setPointerPosition] = useState({
+    leftToPointer: 0,
+    topToPointer: 0,
+    offsetTop: 0,
+    offsetLeft: 0,
   });
   const [imagePostition, setImagePosition] = useState({ top: 0, left: 0 });
 
-  const handleMouseDown = (event) => {
-    setMouseDown(true);
-    setMousePosition({
-      offsetX: event.nativeEvent.offsetX - event.clientX,
-      offsetY: event.nativeEvent.offsetY - event.clientY,
+  const handlePointerDown = (event) => {
+    setPointerDown(true);
+    setPointerPosition({
+      leftToPointer: event.nativeEvent.offsetX + event.target.offsetLeft,
+      topToPointer: event.nativeEvent.offsetY + event.target.offsetTop,
+      offsetLeft:
+        event.nativeEvent.offsetX + event.target.offsetLeft - event.clientX,
+      offsetTop:
+        event.nativeEvent.offsetY + event.target.offsetTop - event.clientY,
     });
-    console.log(
-      event.clientX,
-      event.clientY,
-      event.nativeEvent.offsetX,
-      event.nativeEvent.offsetY
-    );
   };
 
-  const handleMouseUp = (event) => {
-    setMouseDown(false);
+  const handlePointerUp = (event) => {
+    setPointerDown(false);
+    setImagePosition({
+      top:
+        event.clientY -
+        pointerPosition.topToPointer +
+        pointerPosition.offsetTop,
+      left:
+        event.clientX -
+        pointerPosition.leftToPointer +
+        pointerPosition.offsetLeft,
+    });
   };
 
-  const handleMouseMove = (event) => {
-    if (mouseDown) {
+  const handlePointerMove = (event) => {
+    if (pointerDown) {
       setImagePosition({
-        top: event.clientY + mousePosition.offsetY - 500,
-        left: event.clientX + mousePosition.offsetX,
+        top:
+          event.clientY -
+          pointerPosition.topToPointer +
+          pointerPosition.offsetTop,
+        left:
+          event.clientX -
+          pointerPosition.leftToPointer +
+          pointerPosition.offsetLeft,
       });
     }
   };
@@ -65,16 +81,21 @@ export default function ShowImage({ faces, name }) {
         <div
           className="relative"
           style={{ top: imagePostition.top, left: imagePostition.left }}
-          onMouseDown={(e) => {
+          onPointerDown={(e) => {
             e.preventDefault();
-            handleMouseDown(e);
+            handlePointerDown(e);
           }}
-          onMouseUp={(e) => handleMouseUp(e)}
-          onMouseMove={(e) => handleMouseMove(e)}
+          onPointerUp={(e) => {
+            e.preventDefault();
+            handlePointerUp(e);
+          }}
+          onPointerMove={(e) => {
+            e.preventDefault();
+            handlePointerMove(e);
+          }}
         >
           <img
             className="clip-face absolute"
-            // style={{ top: imagePostition.top, left: imagePostition.left }}
             src={faces[currentFaceKey]}
             alt={name}
             loading="eager"
@@ -84,11 +105,11 @@ export default function ShowImage({ faces, name }) {
         <Image
           className="mb-10"
           src={faces[currentFaceKey]}
-          width={650}
-          height={480}
+          width={550}
+          height={490}
           style={{
-            width: '650px',
-            height: '480px',
+            width: '550px',
+            height: '490px',
             objectFit: 'none',
             objectPosition: '0 0',
           }}

@@ -3,9 +3,6 @@
 @tailwind utilities;
 
 .clip-face {
-  clip: rect(500px 163px 655px 0);
-  top: -500px;
-  left: -1px;
   animation-name: face-animation;
   animation-iteration-count: infinite;
   animation-duration: 4s;
