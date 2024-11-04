@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+body {
+  background-color: burlywood;
+} */
+
+.test-sm {
+  width: 100px;
+  height: 100px;
+}
+
+.test-lg {
+  width: 500px;
+  height: 500px;
+}
+
 .clip-face {
   animation-name: face-animation;
   animation-iteration-count: infinite;

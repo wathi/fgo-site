@@ -1,62 +1,64 @@
 'use client';
 import Image from 'next/image';
 import { useState } from 'react';
+import { useRef } from 'react';
 
 export default function ShowImage({ faces, name }) {
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
+
+  let updateDisToContainer = useRef(false);
   const [pointerDown, setPointerDown] = useState(false);
-  const [pointerPosition, setPointerPosition] = useState({
-    leftToPointer: 0,
-    topToPointer: 0,
-    offsetTop: 0,
-    offsetLeft: 0,
-  });
+  const [disToContainer, setDisToContainer] = useState({ top: 0, left: 0 });
+  const [pointerOffSet, setpointerOffSet] = useState({ top: 0, left: 0 });
   const [imagePostition, setImagePosition] = useState({ top: 0, left: 0 });
 
   const handlePointerDown = (event) => {
     setPointerDown(true);
-    setPointerPosition({
-      leftToPointer: event.nativeEvent.offsetX + event.target.offsetLeft,
-      topToPointer: event.nativeEvent.offsetY + event.target.offsetTop,
-      offsetLeft:
-        event.nativeEvent.offsetX + event.target.offsetLeft - event.clientX,
-      offsetTop:
-        event.nativeEvent.offsetY + event.target.offsetTop - event.clientY,
+    if (!updateDisToContainer.current) {
+      setDisToContainer({
+        top:
+          event.clientY -
+          event.nativeEvent.offsetY -
+          event.target.offsetTop -
+          imagePostition.top,
+        left:
+          event.clientX -
+          event.nativeEvent.offsetX -
+          event.target.offsetLeft -
+          imagePostition.left,
+      });
+      updateDisToContainer.current = true;
+    }
+
+    setpointerOffSet({
+      top: event.nativeEvent.offsetY + event.target.offsetTop,
+      left: event.nativeEvent.offsetX + event.target.offsetLeft,
     });
   };
 
   const handlePointerUp = (event) => {
     setPointerDown(false);
-    setImagePosition({
-      top:
-        event.clientY -
-        pointerPosition.topToPointer +
-        pointerPosition.offsetTop,
-      left:
-        event.clientX -
-        pointerPosition.leftToPointer +
-        pointerPosition.offsetLeft,
-    });
   };
 
   const handlePointerMove = (event) => {
     if (pointerDown) {
       setImagePosition({
-        top:
-          event.clientY -
-          pointerPosition.topToPointer +
-          pointerPosition.offsetTop,
-        left:
-          event.clientX -
-          pointerPosition.leftToPointer +
-          pointerPosition.offsetLeft,
+        top: event.clientY - disToContainer.top - pointerOffSet.top,
+
+        left: event.clientX - disToContainer.left - pointerOffSet.left,
       });
+      console.log(
+        'imagePostition ' + imagePostition.left,
+        imagePostition.top,
+        'dis ' + disToContainer.left,
+        disToContainer.top
+      );
     }
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 ">
       <div className="mb-2">再臨セイントグラフ</div>
       <div className="flex">
         {faceKey.map((item) => (
@@ -76,7 +78,7 @@ export default function ShowImage({ faces, name }) {
 
       <div
         className="relative mt-5"
-        style={{ width: '650px', height: '550px' }}
+        style={{ width: '650px', height: '500px' }}
       >
         <div
           className="relative"
@@ -103,13 +105,13 @@ export default function ShowImage({ faces, name }) {
         </div>
 
         <Image
-          className="mb-10"
+          className="ml-20 mb-10"
           src={faces[currentFaceKey]}
           width={550}
           height={490}
           style={{
             width: '550px',
-            height: '490px',
+            height: '480px',
             objectFit: 'none',
             objectPosition: '0 0',
           }}

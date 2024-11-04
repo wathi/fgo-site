@@ -8,8 +8,8 @@ export default async function Servent({ params }) {
   const servantByIdData = await getServantById(id);
 
   return (
-    <>
-      <div className="my-5">
+    <div className="overflow-hidden">
+      <div className="my-5 ">
         <Link
           className="px-10 py-1 border-2"
           href={`/class/${servantByIdData.className}`}
@@ -82,6 +82,6 @@ export default async function Servent({ params }) {
         faces={servantByIdData.extraAssets.charaFigure.ascension}
         name={servantByIdData.name}
       />
-    </>
+    </div>
   );
 }
