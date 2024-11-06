@@ -6,6 +6,7 @@ import ShowImage from './show-image';
 export default async function Servent({ params }) {
   const id = (await params).id;
   const servantByIdData = await getServantById(id);
+  console.log(servantByIdData);
 
   return (
     <div className="overflow-hidden">

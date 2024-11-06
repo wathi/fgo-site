@@ -1,62 +1,18 @@
 'use client';
-import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 
-export default function ShowImage({ faces, name }) {
-  const faceKey = Object.keys(faces).map((key) => key);
-  const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
+export default function Test() {
   const [naturalImgSize, setNaturalImgSize] = useState({
     width: 0,
     height: 0,
   });
   const charaFigure = { width: 1024, height: 768 };
   const charaFace = { width: 256, height: 256 };
-  const [imgURL, setImgURL] = useState(faces);
+  const [imgURL, setImgURL] = useState(
+    'https://static.atlasacademy.io/JP/CharaFigure/1001001/1001001_merged.png'
+  );
   const [count, setCount] = useState(0);
-
-  const getFaces = () => {
-    const nCol = 4;
-    const nRow =
-      (naturalImgSize.height - charaFigure.height) / charaFace.height;
-
-    const faceList = [];
-    for (let i = 1; i <= nRow; i++) {
-      for (let j = 1; j <= nCol; j++) {
-        let top = charaFigure.height + charaFace.height * (i - 1);
-        let right = charaFace.width * (nCol - j);
-        let bottom = charaFace.height * (nRow - i);
-        let left = charaFace.width * (j - 1);
-
-        faceList.push(
-          <Image
-            key={`${i}` + '-' + `${j}`}
-            className="bg-sky-100 absolute"
-            src={imgURL[currentFaceKey]}
-            alt={`${i}` + '-' + `${j}`}
-            width={naturalImgSize.width}
-            height={naturalImgSize.height}
-            style={{
-              objectFit: 'none',
-              objectPosition: 'top',
-              clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px)`,
-              transform: `translateX(-${left}px) translateY(-${top}px)`,
-            }}
-            unoptimized={true}
-            loading="eager"
-          />
-        );
-      }
-    }
-
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setCount((prevCount) => (prevCount + 1) % faceList.length);
-      }, 500);
-      return () => clearInterval(interval);
-    }, [faceList.length]);
-
-    return faceList[count];
-  };
 
   let updateDisToContainer = useRef(false);
   const [pointerDown, setPointerDown] = useState(false);
@@ -86,6 +42,8 @@ export default function ShowImage({ faces, name }) {
       top: event.nativeEvent.offsetY + event.target.offsetTop,
       left: event.nativeEvent.offsetX + event.target.offsetLeft,
     });
+
+    console.log(event);
   };
 
   const handlePointerUp = (event) => {
@@ -108,26 +66,53 @@ export default function ShowImage({ faces, name }) {
     }
   };
 
-  return (
-    <div className="mt-10 ">
-      <div className="mb-2">再臨セイントグラフ</div>
-      <div className="flex">
-        {faceKey.map((item) => (
-          <div
-            key={item}
-            className={
-              currentFaceKey === item
-                ? 'px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer bg-sky-50'
-                : 'px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer '
-            }
-            onClick={() => setCurrentFaceKey(item)}
-          >
-            第{item}再臨
-          </div>
-        ))}
-      </div>
+  const getFaces = () => {
+    const nCol = 4;
+    const nRow =
+      (naturalImgSize.height - charaFigure.height) / charaFace.height;
 
-      <div className="relative mt-5">
+    const faceList = [];
+    for (let i = 1; i <= nRow; i++) {
+      for (let j = 1; j <= nCol; j++) {
+        let top = charaFigure.height + charaFace.height * (i - 1);
+        let right = charaFace.width * (nCol - j);
+        let bottom = charaFace.height * (nRow - i);
+        let left = charaFace.width * (j - 1);
+
+        faceList.push(
+          <Image
+            key={`${i}` + '-' + `${j}`}
+            className="bg-sky-100 absolute"
+            src={imgURL}
+            alt={`${i}` + '-' + `${j}`}
+            width={naturalImgSize.width}
+            height={naturalImgSize.height}
+            style={{
+              objectFit: 'none',
+              objectPosition: 'top',
+              clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px)`,
+              transform: `translateX(-${left}px) translateY(-${top}px)`,
+            }}
+            unoptimized={true}
+          />
+        );
+      }
+    }
+
+    useEffect(() => {
+      const interval = setInterval(() => {
+        setCount((prevCount) => (prevCount + 1) % faceList.length);
+      }, 500);
+      return () => clearInterval(interval);
+    }, [faceList.length]);
+
+    return faceList[count];
+  };
+
+  return (
+    <>
+      <div>TEST PAGE</div>
+      <div className="relative">
         <div
           className="relative"
           style={{
@@ -150,14 +135,15 @@ export default function ShowImage({ faces, name }) {
         >
           {getFaces()}
         </div>
+
         <div
           className="relative overflow-hidden"
           style={{ height: charaFigure.height }}
         >
           <Image
             className="bg-red-100"
-            src={imgURL[currentFaceKey]}
-            alt={name}
+            src={imgURL}
+            alt="Chara Figure"
             width={naturalImgSize.width}
             height={naturalImgSize.height}
             style={{
@@ -172,10 +158,9 @@ export default function ShowImage({ faces, name }) {
                 height: e.target.naturalHeight,
               })
             }
-            loading="eager"
           />
         </div>
       </div>
-    </div>
+    </>
   );
 }
