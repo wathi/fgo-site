@@ -5,33 +5,38 @@ import { useEffect, useState, useRef } from 'react';
 export default function ShowImage({ faces, name }) {
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
-  const [naturalImgSize, setNaturalImgSize] = useState({
-    width: 0,
-    height: 0,
-  });
+  const [naturalImgSize, setNaturalImgSize] = useState({ width: 0, height: 0 });
   const charaFigure = { width: 1024, height: 768 };
   const charaFace = { width: 256, height: 256 };
-  const [imgURL, setImgURL] = useState(faces);
+  const [charaFaceRow, setCharaFaceRow] = useState(0);
+  const charaFaceCol = 4;
   const [count, setCount] = useState(0);
 
-  const getFaces = () => {
-    const nCol = 4;
-    const nRow =
-      (naturalImgSize.height - charaFigure.height) / charaFace.height;
+  useEffect(() => {
+    setCharaFaceRow(
+      (naturalImgSize.height - charaFigure.height) / charaFace.height
+    );
 
+    const interval = setInterval(() => {
+      setCount((prevCount) => (prevCount + 1) % (charaFaceCol * charaFaceRow));
+    }, 500);
+    return () => clearInterval(interval);
+  }, [charaFaceRow, count]);
+
+  const showCharaFace = () => {
     const faceList = [];
-    for (let i = 1; i <= nRow; i++) {
-      for (let j = 1; j <= nCol; j++) {
+    for (let i = 1; i <= charaFaceRow; i++) {
+      for (let j = 1; j <= charaFaceCol; j++) {
         let top = charaFigure.height + charaFace.height * (i - 1);
-        let right = charaFace.width * (nCol - j);
-        let bottom = charaFace.height * (nRow - i);
+        let right = charaFace.width * (charaFaceCol - j);
+        let bottom = charaFace.height * (charaFaceRow - i);
         let left = charaFace.width * (j - 1);
 
         faceList.push(
           <Image
             key={`${i}` + '-' + `${j}`}
-            className="bg-sky-100 absolute"
-            src={imgURL[currentFaceKey]}
+            className="absolute"
+            src={faces[currentFaceKey]}
             alt={`${i}` + '-' + `${j}`}
             width={naturalImgSize.width}
             height={naturalImgSize.height}
@@ -48,44 +53,23 @@ export default function ShowImage({ faces, name }) {
       }
     }
 
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setCount((prevCount) => (prevCount + 1) % faceList.length);
-      }, 500);
-      return () => clearInterval(interval);
-    }, [faceList.length]);
-
     return faceList[count];
   };
 
   let updateDisToContainer = useRef(false);
   const [pointerDown, setPointerDown] = useState(false);
-  const [disToContainer, setDisToContainer] = useState({ top: 0, left: 0 });
-  const [pointerOffSet, setpointerOffSet] = useState({ top: 0, left: 0 });
+  const [edgeToContainer, setEdgeToContainer] = useState({ top: 0, left: 0 });
   const [imagePostition, setImagePosition] = useState({ top: 0, left: 0 });
 
   const handlePointerDown = (event) => {
     setPointerDown(true);
     if (!updateDisToContainer.current) {
-      setDisToContainer({
-        top:
-          event.clientY -
-          event.nativeEvent.offsetY -
-          event.target.offsetTop -
-          imagePostition.top,
-        left:
-          event.clientX -
-          event.nativeEvent.offsetX -
-          event.target.offsetLeft -
-          imagePostition.left,
+      setEdgeToContainer({
+        top: event.clientY - imagePostition.top,
+        left: event.clientX - imagePostition.left,
       });
       updateDisToContainer.current = true;
     }
-
-    setpointerOffSet({
-      top: event.nativeEvent.offsetY + event.target.offsetTop,
-      left: event.nativeEvent.offsetX + event.target.offsetLeft,
-    });
   };
 
   const handlePointerUp = (event) => {
@@ -95,16 +79,10 @@ export default function ShowImage({ faces, name }) {
   const handlePointerMove = (event) => {
     if (pointerDown) {
       setImagePosition({
-        top: event.clientY - disToContainer.top - pointerOffSet.top,
+        top: event.clientY - edgeToContainer.top,
 
-        left: event.clientX - disToContainer.left - pointerOffSet.left,
+        left: event.clientX - edgeToContainer.left,
       });
-      console.log(
-        'imagePostition ' + imagePostition.left,
-        imagePostition.top,
-        'dis ' + disToContainer.left,
-        disToContainer.top
-      );
     }
   };
 
@@ -126,12 +104,10 @@ export default function ShowImage({ faces, name }) {
           </div>
         ))}
       </div>
-
-      <div className="relative mt-5">
+      <div>
         <div
-          className="relative"
+          className="relative bg-red-100"
           style={{
-            height: 256,
             top: imagePostition.top,
             left: imagePostition.left,
           }}
@@ -148,22 +124,18 @@ export default function ShowImage({ faces, name }) {
             handlePointerMove(e);
           }}
         >
-          {getFaces()}
+          {showCharaFace()}
         </div>
-        <div
-          className="relative overflow-hidden"
-          style={{ height: charaFigure.height }}
-        >
+
+        <div className="overflow-hidden" style={{ height: charaFigure.height }}>
           <Image
-            className="bg-red-100"
-            src={imgURL[currentFaceKey]}
+            src={faces[currentFaceKey]}
             alt={name}
             width={naturalImgSize.width}
             height={naturalImgSize.height}
             style={{
               objectFit: 'none',
               objectPosition: 'top',
-              clipPath: `inset(0px 0px 512px 0px)`,
             }}
             unoptimized={true}
             onLoad={(e) =>
