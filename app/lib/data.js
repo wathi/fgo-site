@@ -65,14 +65,14 @@ export async function getFace(id) {
       .eq('servent_id', `${id}`);
 
     if (data.length <= 0) {
-      return [{ img_pos_top: 0, img_pos_left: 0 }];
+      return [{ img_pos_top: 0, img_pos_left: 0, blank_expr: 0 }];
     } else return data;
   } catch (error) {
     console.error('Error:', error);
   }
 }
 
-export async function saveFace(id, imgtop, imgleft, bankExpr) {
+export async function saveFace(id, imgtop, imgleft, blankExpr) {
   try {
     const { data } = await supabase
       .from('faces')
@@ -82,15 +82,18 @@ export async function saveFace(id, imgtop, imgleft, bankExpr) {
     if (data.length >= 1) {
       const { error } = await supabase
         .from('faces')
-        .update({ img_pos_top: imgtop, img_pos_left: imgleft, blank_expr: 10 })
+        .update({
+          img_pos_top: imgtop,
+          img_pos_left: imgleft,
+          blank_expr: blankExpr,
+        })
         .eq('servent_id', id);
-      // console.log('update', imgtop, imgleft);
     } else {
       const { error } = await supabase.from('faces').insert({
         servent_id: id,
         img_pos_top: imgtop,
         img_pos_left: imgleft,
-        blank_expr: 10,
+        blank_expr: blankExpr,
       });
     }
   } catch (error) {

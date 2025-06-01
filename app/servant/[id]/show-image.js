@@ -3,7 +3,14 @@ import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
 import { saveFace } from '@/app/lib/data';
 
-export default function ShowImage({ id, faces, name, imgtop, imgleft }) {
+export default function ShowImage({
+  id,
+  faces,
+  name,
+  imgtop,
+  imgleft,
+  blankExpr,
+}) {
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
   const [naturalImgSize, setNaturalImgSize] = useState({ width: 0, height: 0 });
@@ -12,19 +19,20 @@ export default function ShowImage({ id, faces, name, imgtop, imgleft }) {
   const [charaFaceRow, setCharaFaceRow] = useState(1);
   const charaFaceCol = 4;
   const [count, setCount] = useState(0);
+  const [blankExprInput, setblankExprInput] = useState(blankExpr);
 
   useEffect(() => {
     setCharaFaceRow(
       (naturalImgSize.height - charaFigure.height) / charaFace.height
     );
-  }, [naturalImgSize, charaFaceRow]);
-
-  useEffect(() => {
     const interval = setInterval(() => {
-      setCount((prevCount) => (prevCount + 1) % (charaFaceCol * charaFaceRow));
+      setCount(
+        (prevCount) =>
+          (prevCount + 1) % (charaFaceCol * charaFaceRow - blankExpr)
+      );
     }, 500);
     return () => clearInterval(interval);
-  }, [count]);
+  });
 
   const showCharaFace = () => {
     const faceList = [];
@@ -79,8 +87,6 @@ export default function ShowImage({ id, faces, name, imgtop, imgleft }) {
 
   const handlePointerUp = () => {
     setPointerDown(false);
-    console.log(id, name, imagePostition.top, imagePostition.left);
-    saveFace(id, imagePostition.top, imagePostition.left);
   };
 
   const handlePointerMove = (event) => {
@@ -95,8 +101,33 @@ export default function ShowImage({ id, faces, name, imgtop, imgleft }) {
   return (
     <div className="mt-10 ">
       <div className="flex">
-        <input className="bg-red-100 "></input>
-        <div>Save</div>
+        <input
+          name="blankExprInput"
+          className="px-2 py-1 mr-2 border"
+          placeholder={blankExpr}
+          type="number"
+          max="3"
+          onChange={(e) => setblankExprInput(e.target.value)}
+        ></input>
+        <div
+          className="px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer bg-sky-50"
+          onClick={() =>
+            saveFace(
+              id,
+              imagePostition.top,
+              imagePostition.left,
+              blankExprInput
+            )
+          }
+        >
+          Save
+        </div>
+        <div
+          className="px-2 py-1 mr-2 border border-red-600 rounded-md cursor-pointer bg-red-50"
+          onClick={() => saveFace(id, 0, 0, 0)}
+        >
+          Reset
+        </div>
       </div>
       <div className="mb-2">再臨セイントグラフ</div>
       <div className="flex">

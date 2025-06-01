@@ -83,14 +83,14 @@ export default async function Servent({ params }) {
           </tr>
         </tbody>
       </table>
-      <div>save</div>
-      <div>lood</div>
+
       <ShowImage
         id={servantByIdData.id}
         faces={servantByIdData.extraAssets.charaFigure.ascension}
         name={servantByIdData.name}
         imgtop={faceData[0].img_pos_top}
         imgleft={faceData[0].img_pos_left}
+        blankExpr={faceData[0].blank_expr}
       />
     </div>
   );
