@@ -1,9 +1,9 @@
 'use client';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
+import { saveFace } from '@/app/lib/data';
 
-export default function ShowImage({ faces, name }) {
-  console.log(faces);
+export default function ShowImage({ id, faces, name, imgtop, imgleft }) {
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
   const [naturalImgSize, setNaturalImgSize] = useState({ width: 0, height: 0 });
@@ -12,8 +12,6 @@ export default function ShowImage({ faces, name }) {
   const [charaFaceRow, setCharaFaceRow] = useState(1);
   const charaFaceCol = 4;
   const [count, setCount] = useState(0);
-
-  console.log(naturalImgSize);
 
   useEffect(() => {
     setCharaFaceRow(
@@ -57,14 +55,16 @@ export default function ShowImage({ faces, name }) {
         );
       }
     }
-    console.log(faceList);
     return faceList;
   };
 
   let updateDisToContainer = useRef(false);
   const [pointerDown, setPointerDown] = useState(false);
   const [edgeToContainer, setEdgeToContainer] = useState({ top: 0, left: 0 });
-  const [imagePostition, setImagePosition] = useState({ top: 0, left: 0 });
+  const [imagePostition, setImagePosition] = useState({
+    top: imgtop,
+    left: imgleft,
+  });
 
   const handlePointerDown = (event) => {
     setPointerDown(true);
@@ -77,15 +77,16 @@ export default function ShowImage({ faces, name }) {
     }
   };
 
-  const handlePointerUp = (event) => {
+  const handlePointerUp = () => {
     setPointerDown(false);
+    console.log(id, name, imagePostition.top, imagePostition.left);
+    saveFace(id, imagePostition.top, imagePostition.left);
   };
 
   const handlePointerMove = (event) => {
     if (pointerDown) {
       setImagePosition({
         top: event.clientY - edgeToContainer.top,
-
         left: event.clientX - edgeToContainer.left,
       });
     }
@@ -93,6 +94,10 @@ export default function ShowImage({ faces, name }) {
 
   return (
     <div className="mt-10 ">
+      <div className="flex">
+        <input className="bg-red-100 "></input>
+        <div>Save</div>
+      </div>
       <div className="mb-2">再臨セイントグラフ</div>
       <div className="flex">
         {faceKey.map((item) => (
@@ -147,12 +152,12 @@ export default function ShowImage({ faces, name }) {
             }}
             unoptimized={true}
             onLoad={
-              (console.log('onload'),
+              // console.log('onload'),
               (e) =>
                 setNaturalImgSize({
                   width: e.target.naturalWidth,
                   height: e.target.naturalHeight,
-                }))
+                })
             }
             loading="eager"
           />

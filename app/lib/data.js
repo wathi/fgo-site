@@ -6,7 +6,6 @@ export async function getServantByClass(className) {
     const response = await fetch(
       `${baseURL}/basic/${region}/servant/search?className=${className}`
     );
-
     const data = await response.json();
     return data;
   } catch (error) {
@@ -17,7 +16,6 @@ export async function getServantByClass(className) {
 export async function getServantById(id) {
   try {
     const response = await fetch(`${baseURL}/nice/${region}/servant/${id}`);
-
     const data = await response.json();
     return data;
   } catch (error) {
@@ -28,7 +26,6 @@ export async function getServantById(id) {
 export async function getServantDetailsById(id) {
   try {
     const response = await fetch(`${baseURL}/nice/${region}/servant/${id}`);
-
     const data = await response.json();
     return data;
   } catch (error) {
@@ -56,4 +53,47 @@ export function getClassList() {
   ];
 
   return classList;
+}
+
+import supabase from '../utils/supabase';
+
+export async function getFace(id) {
+  try {
+    const { data } = await supabase
+      .from('faces')
+      .select()
+      .eq('servent_id', `${id}`);
+
+    if (data.length <= 0) {
+      return [{ img_pos_top: 0, img_pos_left: 0 }];
+    } else return data;
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+export async function saveFace(id, imgtop, imgleft, bankExpr) {
+  try {
+    const { data } = await supabase
+      .from('faces')
+      .select()
+      .eq('servent_id', `${id}`);
+
+    if (data.length >= 1) {
+      const { error } = await supabase
+        .from('faces')
+        .update({ img_pos_top: imgtop, img_pos_left: imgleft, blank_expr: 10 })
+        .eq('servent_id', id);
+      // console.log('update', imgtop, imgleft);
+    } else {
+      const { error } = await supabase.from('faces').insert({
+        servent_id: id,
+        img_pos_top: imgtop,
+        img_pos_left: imgleft,
+        blank_expr: 10,
+      });
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
 }

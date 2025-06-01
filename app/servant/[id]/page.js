@@ -1,12 +1,16 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getServantById } from '@/app/lib/data';
+import { getServantById, getFace } from '@/app/lib/data';
 import ShowImage from './show-image';
 
 export default async function Servent({ params }) {
   const id = (await params).id;
+
   const servantByIdData = await getServantById(id);
   console.log(servantByIdData);
+
+  const faceData = await getFace(id);
+  console.log(faceData);
 
   return (
     <div className="overflow-hidden">
@@ -79,9 +83,14 @@ export default async function Servent({ params }) {
           </tr>
         </tbody>
       </table>
+      <div>save</div>
+      <div>lood</div>
       <ShowImage
+        id={servantByIdData.id}
         faces={servantByIdData.extraAssets.charaFigure.ascension}
         name={servantByIdData.name}
+        imgtop={faceData[0].img_pos_top}
+        imgleft={faceData[0].img_pos_left}
       />
     </div>
   );
