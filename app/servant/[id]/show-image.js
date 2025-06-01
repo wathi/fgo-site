@@ -20,6 +20,7 @@ export default function ShowImage({
   const charaFaceCol = 4;
   const [count, setCount] = useState(0);
   const [blankExprInput, setblankExprInput] = useState(blankExpr);
+  const [message, setMessage] = useState('');
 
   useEffect(() => {
     setCharaFaceRow(
@@ -104,30 +105,40 @@ export default function ShowImage({
         <input
           name="blankExprInput"
           className="px-2 py-1 mr-2 border"
-          placeholder={blankExpr}
+          value={blankExprInput}
           type="number"
           max="3"
-          onChange={(e) => setblankExprInput(e.target.value)}
+          onChange={(e) => {
+            setblankExprInput(e.target.value);
+            setMessage('');
+          }}
         ></input>
         <div
           className="px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer bg-sky-50"
-          onClick={() =>
+          onClick={() => {
             saveFace(
               id,
               imagePostition.top,
               imagePostition.left,
               blankExprInput
-            )
-          }
+            );
+            setMessage('Saved!');
+          }}
         >
           Save
         </div>
         <div
           className="px-2 py-1 mr-2 border border-red-600 rounded-md cursor-pointer bg-red-50"
-          onClick={() => saveFace(id, 0, 0, 0)}
+          onClick={() => {
+            saveFace(id, 0, 0, 0);
+            setImagePosition({ top: 0, left: 0 });
+            setblankExprInput(0);
+            setMessage('Reset!');
+          }}
         >
           Reset
         </div>
+        <div>{message}</div>
       </div>
       <div className="mb-2">再臨セイントグラフ</div>
       <div className="flex">
@@ -147,7 +158,7 @@ export default function ShowImage({
       </div>
       <div style={{ width: charaFigure.width }}>
         <div
-          className="relative bg-red-100"
+          className="relative"
           style={{
             top: imagePostition.top,
             left: imagePostition.left,
@@ -155,6 +166,7 @@ export default function ShowImage({
           onPointerDown={(e) => {
             e.preventDefault();
             handlePointerDown(e);
+            setMessage('');
           }}
           onPointerUp={(e) => {
             e.preventDefault();
