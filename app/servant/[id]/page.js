@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getServantById, getFace } from '@/app/lib/data';
 import ShowImage from './show-image';
+import Novel from './novel';
 
 export default async function Servent({ params }) {
   const id = (await params).id;
@@ -90,8 +91,11 @@ export default async function Servent({ params }) {
         name={servantByIdData.name}
         imgtop={faceData[0].img_pos_top}
         imgleft={faceData[0].img_pos_left}
-        blankExpr={faceData[0].blank_expr}
+        exprBlank={faceData[0].expr_blank}
+        exprSelect={faceData[0].expr_select}
       />
+
+      <Novel />
     </div>
   );
 }

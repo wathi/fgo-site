@@ -9,7 +9,8 @@ export default function ShowImage({
   name,
   imgtop,
   imgleft,
-  blankExpr,
+  exprBlank,
+  exprSelect,
 }) {
   const faceKey = Object.keys(faces).map((key) => key);
   const [currentFaceKey, setCurrentFaceKey] = useState(faceKey[0]);
@@ -19,20 +20,21 @@ export default function ShowImage({
   const [charaFaceRow, setCharaFaceRow] = useState(1);
   const charaFaceCol = 4;
   const [count, setCount] = useState(0);
-  const [blankExprInput, setblankExprInput] = useState(blankExpr);
+  const [blankExprInput, setBlankExprInput] = useState(exprBlank);
+  const [selectExprInput, setSelectExprInput] = useState(exprSelect);
   const [message, setMessage] = useState('');
 
   useEffect(() => {
     setCharaFaceRow(
       (naturalImgSize.height - charaFigure.height) / charaFace.height
     );
-    const interval = setInterval(() => {
-      setCount(
-        (prevCount) =>
-          (prevCount + 1) % (charaFaceCol * charaFaceRow - blankExpr)
-      );
-    }, 500);
-    return () => clearInterval(interval);
+    // const interval = setInterval(() => {
+    //   setCount(
+    //     (prevCount) =>
+    //       (prevCount + 1) % (charaFaceCol * charaFaceRow - blankExpr)
+    //   );
+    // }, 500);
+    // return () => clearInterval(interval);
   });
 
   const showCharaFace = () => {
@@ -102,14 +104,29 @@ export default function ShowImage({
   return (
     <div className="mt-10 ">
       <div className="flex">
+        <div className="py-1 mr-1 w-20">空白</div>
         <input
           name="blankExprInput"
-          className="px-2 py-1 mr-2 border"
+          className="px-2 py-1 mr-2 border w-20"
           value={blankExprInput}
           type="number"
           max="3"
+          min="0"
           onChange={(e) => {
-            setblankExprInput(e.target.value);
+            setBlankExprInput(e.target.value);
+            setMessage('');
+          }}
+        ></input>
+        <div className="py-1 mr-1 w-20">表情番号</div>
+        <input
+          name="selectExprInput"
+          className="px-2 py-1 mr-2 border w-20"
+          value={selectExprInput}
+          type="number"
+          max={showCharaFace().length - exprBlank - 1}
+          min="0"
+          onChange={(e) => {
+            setSelectExprInput(e.target.value);
             setMessage('');
           }}
         ></input>
@@ -120,7 +137,8 @@ export default function ShowImage({
               id,
               imagePostition.top,
               imagePostition.left,
-              blankExprInput
+              blankExprInput,
+              selectExprInput
             );
             setMessage('Saved!');
           }}
@@ -177,7 +195,7 @@ export default function ShowImage({
             handlePointerMove(e);
           }}
         >
-          {showCharaFace()[count]}
+          {showCharaFace()[selectExprInput]}
         </div>
 
         <div
@@ -194,13 +212,11 @@ export default function ShowImage({
               objectPosition: 'top',
             }}
             unoptimized={true}
-            onLoad={
-              // console.log('onload'),
-              (e) =>
-                setNaturalImgSize({
-                  width: e.target.naturalWidth,
-                  height: e.target.naturalHeight,
-                })
+            onLoad={(e) =>
+              setNaturalImgSize({
+                width: e.target.naturalWidth,
+                height: e.target.naturalHeight,
+              })
             }
             loading="eager"
           />
