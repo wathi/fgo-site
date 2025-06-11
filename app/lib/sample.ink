@@ -1,7 +1,27 @@
-Once upon a time...
+LONDON, 1872
+Residence of Monsieur Phileas Fogg.
+-> london
 
- * There were two choices.
- * There were four lines of content.
+=== london ===
+Monsieur Phileas Fogg returned home early from the Reform Club, and in a new-fangled steam-carriage, besides!  
+"Passepartout," said he. "We are going around the world!"  #servant:100100 #expression:3
 
-- They lived happily ever after.
-    -> END
+* "Around the world, Monsieur?" 
+    I was utterly astonished. 
+    -> astonished
+* [Nod curtly.] -> nod
+
+=== astonished ===
+"You are in jest!" I told him in dignified affront. "You make mock of me, Monsieur."
+"I am quite serious."
+
++ "But of course"
+    -> ending
+
+=== nod ===
+I nodded curtly, not believing a word of it.
+-> ending
+
+=== ending
+"We shall circumnavigate the globe within eighty days." He was quite calm as he proposed this wild scheme. "We leave for Paris on the 8:25. In an hour."
+-> END

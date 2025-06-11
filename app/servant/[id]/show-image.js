@@ -1,7 +1,9 @@
 'use client';
-import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
-import { saveFace } from '@/app/lib/data';
+import SetImage from './set-image';
+import FaceExpression from './face-expression';
+import ShowCharaImage from './show-chara-image';
+import { charaFaceExpression } from '@/app/lib/data';
 
 export default function ShowImage({
   id,
@@ -19,55 +21,33 @@ export default function ShowImage({
   const charaFace = { width: 256, height: 256 };
   const [charaFaceRow, setCharaFaceRow] = useState(1);
   const charaFaceCol = 4;
-  // const [count, setCount] = useState(0);
   const [blankExprInput, setBlankExprInput] = useState(exprBlank);
   const [selectExprInput, setSelectExprInput] = useState(exprSelect);
   const [message, setMessage] = useState('');
+  const [faceExpr, setFaceExpr] = useState([]);
 
   useEffect(() => {
     setCharaFaceRow(
       (naturalImgSize.height - charaFigure.height) / charaFace.height
     );
-    // const interval = setInterval(() => {
-    //   setCount(
-    //     (prevCount) =>
-    //       (prevCount + 1) % (charaFaceCol * charaFaceRow - blankExpr)
-    //   );
-    // }, 500);
-    // return () => clearInterval(interval);
   });
 
-  const showCharaFace = () => {
-    const faceList = [];
-    for (let i = 1; i <= charaFaceRow; i++) {
-      for (let j = 1; j <= charaFaceCol; j++) {
-        let top = charaFigure.height + charaFace.height * (i - 1);
-        let right = charaFace.width * (charaFaceCol - j);
-        let bottom = charaFace.height * (charaFaceRow - i);
-        let left = charaFace.width * (j - 1);
-
-        faceList.push(
-          <Image
-            key={`${i}` + '-' + `${j}`}
-            className="absolute bg-red-100"
-            src={faces[currentFaceKey]}
-            alt={`${i}` + '-' + `${j}`}
-            width={naturalImgSize.width}
-            height={naturalImgSize.height}
-            style={{
-              objectFit: 'none',
-              objectPosition: 'top',
-              clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px)`,
-              transform: `translateX(-${left}px) translateY(-${top}px)`,
-            }}
-            unoptimized={true}
-            loading="eager"
-          />
-        );
-      }
+  useEffect(() => {
+    if (charaFaceRow) {
+      setFaceExpr(
+        charaFaceExpression(
+          faces,
+          currentFaceKey,
+          naturalImgSize,
+          charaFaceRow,
+          charaFaceCol,
+          charaFace.height,
+          charaFace.width,
+          charaFigure.height
+        )
+      );
     }
-    return faceList;
-  };
+  }, [charaFaceRow, currentFaceKey]);
 
   let updateDisToContainer = useRef(false);
   const [pointerDown, setPointerDown] = useState(false);
@@ -103,78 +83,23 @@ export default function ShowImage({
 
   return (
     <div className="mt-10 ">
-      <div className="flex">
-        <div className="py-1 mr-1 w-20">空白</div>
-        <input
-          name="blankExprInput"
-          className="px-2 py-1 mr-2 border w-20"
-          value={blankExprInput}
-          type="number"
-          max="3"
-          min="0"
-          onChange={(e) => {
-            setBlankExprInput(e.target.value);
-            setMessage('');
-          }}
-        ></input>
-        <div className="py-1 mr-1 w-20">表情番号</div>
-        <input
-          name="selectExprInput"
-          className="px-2 py-1 mr-2 border w-20"
-          value={selectExprInput}
-          type="number"
-          max={showCharaFace().length - exprBlank - 1}
-          min="0"
-          onChange={(e) => {
-            setSelectExprInput(e.target.value);
-            setMessage('');
-          }}
-        ></input>
-        <div
-          className="px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer bg-sky-50"
-          onClick={() => {
-            saveFace(
-              id,
-              imagePostition.top,
-              imagePostition.left,
-              blankExprInput,
-              selectExprInput
-            );
-            setMessage('Saved!');
-          }}
-        >
-          Save
-        </div>
-        <div
-          className="px-2 py-1 mr-2 border border-red-600 rounded-md cursor-pointer bg-red-50"
-          onClick={() => {
-            saveFace(id, 0, 0, 0, 0);
-            setImagePosition({ top: 0, left: 0 });
-            setBlankExprInput(0);
-            setSelectExprInput(0);
-            setMessage('Reset!');
-          }}
-        >
-          Reset
-        </div>
-        <div>{message}</div>
-      </div>
-      <div className="mb-2">再臨セイントグラフ</div>
-      <div className="flex">
-        {faceKey.map((item) => (
-          <div
-            key={item}
-            className={
-              currentFaceKey === item
-                ? 'px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer bg-sky-50'
-                : 'px-2 py-1 mr-2 border border-sky-600 rounded-md cursor-pointer '
-            }
-            onClick={() => setCurrentFaceKey(item)}
-          >
-            第{item}再臨
-          </div>
-        ))}
-      </div>
+      <SetImage
+        id={id}
+        length={faceExpr.length}
+        faceKey={faceKey}
+        setCurrentFaceKey={setCurrentFaceKey}
+        selectExprInput={selectExprInput}
+        setSelectExprInput={setSelectExprInput}
+        blankExprInput={blankExprInput}
+        setBlankExprInput={setBlankExprInput}
+        message={message}
+        setMessage={setMessage}
+        exprBlank={exprBlank}
+        exprSelect={exprSelect}
+        currentFaceKey={currentFaceKey}
+        imagePostition={imagePostition}
+        setImagePosition={setImagePosition}
+      />
       <div style={{ width: charaFigure.width }}>
         <div
           className="relative"
@@ -196,30 +121,22 @@ export default function ShowImage({
             handlePointerMove(e);
           }}
         >
-          {showCharaFace()[selectExprInput]}
+          <FaceExpression
+            showCharaFace={faceExpr}
+            selectExprInput={selectExprInput}
+          />
         </div>
 
         <div
           className="overflow-hidden"
           style={{ width: charaFigure.width, height: charaFigure.height }}
         >
-          <Image
-            src={faces[currentFaceKey]}
-            alt={name}
-            width={charaFigure.width}
-            height={charaFigure.height}
-            style={{
-              objectFit: 'none',
-              objectPosition: 'top',
-            }}
-            unoptimized={true}
-            onLoad={(e) =>
-              setNaturalImgSize({
-                width: e.target.naturalWidth,
-                height: e.target.naturalHeight,
-              })
-            }
-            loading="eager"
+          <ShowCharaImage
+            faces={faces}
+            currentFaceKey={currentFaceKey}
+            charaFigure={charaFigure}
+            setNaturalImgSize={setNaturalImgSize}
+            name={name}
           />
         </div>
       </div>

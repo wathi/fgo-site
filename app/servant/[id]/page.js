@@ -1,17 +1,12 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { getServantById, getFace } from '@/app/lib/data';
+import { getServantById, getFaceImgPos } from '@/app/lib/data';
 import ShowImage from './show-image';
-import Novel from './novel';
 
-export default async function Servent({ params }) {
+export default async function Servant({ params }) {
   const id = (await params).id;
-
   const servantByIdData = await getServantById(id);
-  console.log(servantByIdData);
-
-  const faceData = await getFace(id);
-  console.log(faceData);
+  const faceData = await getFaceImgPos(id);
 
   return (
     <div className="overflow-hidden">
@@ -94,8 +89,6 @@ export default async function Servent({ params }) {
         exprBlank={faceData[0].expr_blank}
         exprSelect={faceData[0].expr_select}
       />
-
-      <Novel />
     </div>
   );
 }

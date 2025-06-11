@@ -1,24 +1,35 @@
 'use client';
+import data from '@/app/lib/sample.ink';
+import { Compiler } from 'inkjs/full';
+const storyContent = new Compiler(data).Compile();
+const jsonBytecode = storyContent.ToJson();
+
 import { useState, useEffect } from 'react';
 import { Story } from 'inkjs';
-import storyContent from '@/app/lib/fate.json';
 
-export default function Novel() {
+export default function MainStory() {
   const [story, setStory] = useState();
   const [content, setContent] = useState([]);
   const [choices, setChoices] = useState([]);
 
   useEffect(() => {
-    const inkStory = new Story(storyContent);
+    const inkStory = new Story(jsonBytecode);
     setStory(inkStory);
     continueStory(inkStory);
   }, []);
 
   const continueStory = (s) => {
     let text = [];
+    let tags = [];
     while (s.canContinue) {
-      text.push(s.Continue());
+      let paragraphText = s.Continue();
+      let paragraphTags = s.currentTags;
+      console.log(paragraphText);
+      console.log(paragraphTags);
+      text.push(paragraphText);
+      tags.push(paragraphTags);
     }
+
     setContent(text);
     setChoices(s.currentChoices);
   };
@@ -30,15 +41,15 @@ export default function Novel() {
 
   return (
     <div className="my-10 p-10 border">
-      <div>
+      <div className="my-10 p-10 border">
         {content.map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
         ))}
       </div>
-      <div>
+      <div className="flex flex-col">
         {choices.map((choice, index) => (
           <button
-            className="p-2 border bg-blue-50"
+            className="p-2 border bg-blue-50 hover:bg-blue-200"
             key={index}
             onClick={() => handleChoice(choice.index)}
           >

@@ -57,7 +57,7 @@ export function getClassList() {
 
 import supabase from '../utils/supabase';
 
-export async function getFace(id) {
+export async function getFaceImgPos(id) {
   try {
     const { data } = await supabase
       .from('faces')
@@ -74,7 +74,13 @@ export async function getFace(id) {
   }
 }
 
-export async function saveFace(id, imgtop, imgleft, exprBlank, exprSelect) {
+export async function saveFaceImgPos(
+  id,
+  imgtop,
+  imgleft,
+  exprBlank,
+  exprSelect
+) {
   try {
     const { data } = await supabase
       .from('faces')
@@ -103,4 +109,47 @@ export async function saveFace(id, imgtop, imgleft, exprBlank, exprSelect) {
   } catch (error) {
     console.error('Error:', error);
   }
+}
+
+import Image from 'next/image';
+export function charaFaceExpression(
+  faces,
+  currentFaceKey,
+  naturalImgSize,
+  charaFaceRow,
+  charaFaceCol,
+  charaFaceHeight,
+  charaFaceWidth,
+  charaFigureHeight
+) {
+  const faceList = [];
+  for (let i = 1; i <= charaFaceRow; i++) {
+    for (let j = 1; j <= charaFaceCol; j++) {
+      let top = charaFigureHeight + charaFaceHeight * (i - 1);
+      let right = charaFaceWidth * (charaFaceCol - j);
+      let bottom = charaFaceHeight * (charaFaceRow - i);
+      let left = charaFaceWidth * (j - 1);
+
+      faceList.push(
+        <Image
+          key={`${i}` + '-' + `${j}`}
+          className="absolute bg-red-100"
+          src={faces[currentFaceKey]}
+          alt={`${i}` + '-' + `${j}`}
+          width={naturalImgSize.width}
+          height={naturalImgSize.height}
+          style={{
+            objectFit: 'none',
+            objectPosition: 'top',
+            clipPath: `inset(${top}px ${right}px ${bottom}px ${left}px)`,
+            transform: `translateX(-${left}px) translateY(-${top}px)`,
+          }}
+          unoptimized={true}
+          loading="eager"
+        />
+      );
+    }
+  }
+
+  return faceList;
 }
