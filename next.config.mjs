@@ -10,6 +10,13 @@ const nextConfig = {
       },
     ],
   },
+  webpack: (config, options) => {
+    config.module.rules.push({
+      test: /\.ink$/i,
+      type: 'asset/source',
+    });
+    return config;
+  },
   reactStrictMode: false,
 };
 export default nextConfig;

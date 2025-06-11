@@ -19,7 +19,7 @@ export default function ShowImage({
   const charaFace = { width: 256, height: 256 };
   const [charaFaceRow, setCharaFaceRow] = useState(1);
   const charaFaceCol = 4;
-  const [count, setCount] = useState(0);
+  // const [count, setCount] = useState(0);
   const [blankExprInput, setBlankExprInput] = useState(exprBlank);
   const [selectExprInput, setSelectExprInput] = useState(exprSelect);
   const [message, setMessage] = useState('');
@@ -49,7 +49,7 @@ export default function ShowImage({
         faceList.push(
           <Image
             key={`${i}` + '-' + `${j}`}
-            className="absolute"
+            className="absolute bg-red-100"
             src={faces[currentFaceKey]}
             alt={`${i}` + '-' + `${j}`}
             width={naturalImgSize.width}
@@ -148,9 +148,10 @@ export default function ShowImage({
         <div
           className="px-2 py-1 mr-2 border border-red-600 rounded-md cursor-pointer bg-red-50"
           onClick={() => {
-            saveFace(id, 0, 0, 0);
+            saveFace(id, 0, 0, 0, 0);
             setImagePosition({ top: 0, left: 0 });
-            setblankExprInput(0);
+            setBlankExprInput(0);
+            setSelectExprInput(0);
             setMessage('Reset!');
           }}
         >
