@@ -36,6 +36,7 @@ export default function ShowImage({
     if (charaFaceRow) {
       setFaceExpr(
         charaFaceExpression(
+          id,
           faces,
           currentFaceKey,
           naturalImgSize,

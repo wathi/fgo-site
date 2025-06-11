@@ -4,7 +4,14 @@ import ShowCharaImage from '../servant/[id]/show-chara-image';
 import { charaFaceExpression } from '../lib/data';
 import { useState, useEffect } from 'react';
 
-export default function ShowImageNovel({ id, faces, name, imgtop, imgleft }) {
+export default function ShowImageNovel({
+  id,
+  faces,
+  name,
+  imgtop,
+  imgleft,
+  currentChara,
+}) {
   const imagePostition = {
     top: imgtop,
     left: imgleft,
@@ -22,12 +29,13 @@ export default function ShowImageNovel({ id, faces, name, imgtop, imgleft }) {
     setCharaFaceRow(
       (naturalImgSize.height - charaFigure.height) / charaFace.height
     );
-  });
+  }, [naturalImgSize]);
 
   useEffect(() => {
     if (charaFaceRow) {
       setFaceExpr(
         charaFaceExpression(
+          id,
           faces,
           currentFaceKey,
           naturalImgSize,
@@ -39,7 +47,7 @@ export default function ShowImageNovel({ id, faces, name, imgtop, imgleft }) {
         )
       );
     }
-  }, [charaFaceRow, currentFaceKey]);
+  }, [charaFaceRow, id]);
 
   return (
     <div style={{ width: charaFigure.width }}>

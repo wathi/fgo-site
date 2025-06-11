@@ -7,7 +7,7 @@ const jsonBytecode = storyContent.ToJson();
 import { useState, useEffect } from 'react';
 import { Story } from 'inkjs';
 
-export default function MainStory() {
+export default function MainStory({ setCurrentTags }) {
   const [story, setStory] = useState();
   const [content, setContent] = useState([]);
   const [choices, setChoices] = useState([]);
@@ -24,23 +24,26 @@ export default function MainStory() {
     while (s.canContinue) {
       let paragraphText = s.Continue();
       let paragraphTags = s.currentTags;
-      console.log(paragraphText);
-      console.log(paragraphTags);
+
       text.push(paragraphText);
-      tags.push(paragraphTags);
+      if (paragraphTags != '') {
+        tags.push(paragraphTags);
+      }
     }
 
     setContent(text);
     setChoices(s.currentChoices);
+    setCurrentTags(tags);
   };
 
   const handleChoice = (index) => {
     story.ChooseChoiceIndex(index);
+    setCurrentTags([]);
     continueStory(story);
   };
 
   return (
-    <div className="my-10 p-10 border">
+    <>
       <div className="my-10 p-10 border">
         {content.map((paragraph, index) => (
           <p key={index}>{paragraph}</p>
@@ -57,6 +60,6 @@ export default function MainStory() {
           </button>
         ))}
       </div>
-    </div>
+    </>
   );
 }

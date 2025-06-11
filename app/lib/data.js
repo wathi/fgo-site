@@ -113,6 +113,7 @@ export async function saveFaceImgPos(
 
 import Image from 'next/image';
 export function charaFaceExpression(
+  id,
   faces,
   currentFaceKey,
   naturalImgSize,
