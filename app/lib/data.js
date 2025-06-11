@@ -134,7 +134,7 @@ export function charaFaceExpression(
       faceList.push(
         <Image
           key={`${i}` + '-' + `${j}`}
-          className="absolute bg-red-100"
+          className="absolute"
           src={faces[currentFaceKey]}
           alt={`${i}` + '-' + `${j}`}
           width={naturalImgSize.width}
