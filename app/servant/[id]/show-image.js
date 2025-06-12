@@ -40,7 +40,6 @@ export default function ShowImage({
           currentFaceKey,
           naturalImgSize,
           charaFaceRow,
-
           charaFace.height,
           charaFace.width,
           charaFigure.height

@@ -4,7 +4,14 @@ import ShowCharaImage from '../servant/[id]/show-chara-image';
 import { charaFaceExpression } from '../lib/data';
 import { useState, useEffect } from 'react';
 
-export default function ShowImageNovel({ id, faces, name, imgtop, imgleft }) {
+export default function ShowImageNovel({
+  id,
+  faces,
+  name,
+  imgtop,
+  imgleft,
+  customClassName,
+}) {
   const imagePostition = {
     top: imgtop,
     left: imgleft,
@@ -41,7 +48,7 @@ export default function ShowImageNovel({ id, faces, name, imgtop, imgleft }) {
   }, [charaFaceRow, id]);
 
   return (
-    <div style={{ width: charaFigure.width }}>
+    <div style={{ width: charaFigure.width }} className={customClassName}>
       <div
         className="relative"
         style={{

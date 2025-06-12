@@ -40,14 +40,29 @@ export default function Novel() {
   }
   return (
     <div className="my-10 p-10 border">
-      <ShowImageNovel
-        id={servantByIdData.id}
-        faces={servantByIdData.extraAssets.charaFigure.ascension}
-        name={servantByIdData.name}
-        imgtop={faceData[0].img_pos_top}
-        imgleft={faceData[0].img_pos_left}
-        currentChara={currentChara}
-      />
+      <div className="flex">
+        <ShowImageNovel
+          key="charaA"
+          customClassName="bg-blue-100"
+          id={servantByIdData.id}
+          faces={servantByIdData.extraAssets.charaFigure.ascension}
+          name={servantByIdData.name}
+          imgtop={faceData[0].img_pos_top}
+          imgleft={faceData[0].img_pos_left}
+          currentChara={currentChara}
+        />
+        <ShowImageNovel
+          key="charaB"
+          customClassName="bg-red-100 brightness-50 contrast-50"
+          id={servantByIdData.id}
+          faces={servantByIdData.extraAssets.charaFigure.ascension}
+          name={servantByIdData.name}
+          imgtop={faceData[0].img_pos_top}
+          imgleft={faceData[0].img_pos_left}
+          currentChara={currentChara}
+        />
+      </div>
+
       <MainStory setCurrentTags={updateCurrentTags} />
     </div>
   );
