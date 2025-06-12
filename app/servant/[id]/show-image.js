@@ -20,7 +20,6 @@ export default function ShowImage({
   const charaFigure = { width: 1024, height: 768 };
   const charaFace = { width: 256, height: 256 };
   const [charaFaceRow, setCharaFaceRow] = useState(1);
-  const charaFaceCol = 4;
   const [blankExprInput, setBlankExprInput] = useState(exprBlank);
   const [selectExprInput, setSelectExprInput] = useState(exprSelect);
   const [message, setMessage] = useState('');
@@ -41,7 +40,7 @@ export default function ShowImage({
           currentFaceKey,
           naturalImgSize,
           charaFaceRow,
-          charaFaceCol,
+
           charaFace.height,
           charaFace.width,
           charaFigure.height

@@ -3,7 +3,6 @@ import { useState, useEffect } from 'react';
 import { getServantById, getFaceImgPos } from '../lib/data';
 import ShowImageNovel from './show-image-novel';
 import MainStory from './main-story';
-import Loading from './loading';
 
 export default function Novel() {
   const [servantByIdData, setServantByIdData] = useState(null);

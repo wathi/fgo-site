@@ -118,11 +118,11 @@ export function charaFaceExpression(
   currentFaceKey,
   naturalImgSize,
   charaFaceRow,
-  charaFaceCol,
   charaFaceHeight,
   charaFaceWidth,
   charaFigureHeight
 ) {
+  let charaFaceCol = 4;
   const faceList = [];
   for (let i = 1; i <= charaFaceRow; i++) {
     for (let j = 1; j <= charaFaceCol; j++) {
