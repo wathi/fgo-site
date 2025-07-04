@@ -43,17 +43,7 @@ export default function Novel() {
       <div className="flex">
         <ShowImageNovel
           key="charaA"
-          customClassName="bg-blue-100"
-          id={servantByIdData.id}
-          faces={servantByIdData.extraAssets.charaFigure.ascension}
-          name={servantByIdData.name}
-          imgtop={faceData[0].img_pos_top}
-          imgleft={faceData[0].img_pos_left}
-          currentChara={currentChara}
-        />
-        <ShowImageNovel
-          key="charaB"
-          customClassName="bg-red-100 brightness-50 contrast-50"
+          customClassName="bg-blue-50"
           id={servantByIdData.id}
           faces={servantByIdData.extraAssets.charaFigure.ascension}
           name={servantByIdData.name}
